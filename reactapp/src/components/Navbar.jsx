@@ -1,8 +1,9 @@
 import { AppBar, Box, Container, Toolbar, Button } from "@mui/material";
 
-import { BrowserRouter, Link, Route, Routes, Switch } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import Likes from "../pages/likes";
 import AllCats from "../pages/AllCats";
+import NotFound from "../pages/NotFound";
 
 const Navbar = () => {
   return (
@@ -24,6 +25,7 @@ const Navbar = () => {
       <Routes>
         <Route path="/" element={<AllCats />}></Route>
         <Route path="/likes" element={<Likes />}></Route>
+        <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </>
   );
