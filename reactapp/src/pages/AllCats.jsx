@@ -1,14 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import catService from "../api/catService";
 import CatItem from "../components/CatItem";
 import { Grid, CircularProgress, Button } from "@mui/material";
-import Loader from "../components/UI/Loader/Loader";
 
 const AllCats = () => {
   const [arrCats, setArrCats] = useState([]);
   const [isCatsLoading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
+  const lastElement = useRef();
+  const observer = useRef();
+  console.log(lastElement);
 
   async function getCats() {
     setLoading(true);
@@ -20,6 +22,18 @@ const AllCats = () => {
       setLoading(false);
     });
   }
+
+  useEffect(() => {
+    var callback = function (entries, observer) {
+      /* Content excerpted, show below */
+      if (entries[0].isIntersecting) {
+        console.log("Opa");
+        setPage(page + 1);
+      }
+    };
+    observer.current = new IntersectionObserver(callback);
+    observer.current.observe(lastElement.current);
+  });
 
   useEffect(() => {
     getCats();
@@ -40,19 +54,19 @@ const AllCats = () => {
         ) : null}
 
         {arrCats.map((el) => {
-          // return <img src={el.url} alt="" width={300} height={300} />;
           return <CatItem img={el.url} liked={false} key={el.id}></CatItem>;
-          // console.log(el);
         })}
       </Grid>
-      <Button
-        onClick={() => {
-          setPage(page + 1);
-          console.log(page + 1);
+
+      <div
+        ref={lastElement}
+        style={{
+          alignItems: "center",
+          margin: "0 auto",
+          justifyContent: "center",
+          height: 20,
         }}
-      >
-        Next
-      </Button>
+      ></div>
     </>
   );
 };
